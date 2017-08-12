@@ -44,5 +44,25 @@ case class AddressLabelMaker() extends LabelMaker[Address] {
 //case classes no necesitan new son para tipos algebraicos y queda mas elegante que no tengan new.
 AddressLabelMaker().toLabel(Address(100, "Monroe Street", "Denver", "CO", "80231"))
 
+//Un mejor diseño
+
+//def printLabel[T](t: T)(lm: LabelMaker[T]) = lm.toLabel(t)
+
+object LabelMaker {
+  implicit object AddressLabelMaker extends LabelMaker[Address] {
+    def toLabel(address: Address): String = {
+      import address._
+      "%d %s, %s, %s - %s".format(no, street, city, state, zip)
+    }
+  }
+}
+
+def printLabel[T: LabelMaker](t: T) = implicitly[LabelMaker[T]].toLabel(t)
+
+//def printLabel[T](t: T)(implicit lm: LabelMaker[T]) = lm.toLabel(t)
+
+printLabel(Address(100, "Monroe Street", "Denver", "CO", "80231"))
+
+
 
 
