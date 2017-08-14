@@ -55,14 +55,20 @@ object LabelMaker {
       "%d %s, %s, %s - %s".format(no, street, city, state, zip)
     }
   }
+
+  def printLabel[T: LabelMaker](t: T) = implicitly[LabelMaker[T]].toLabel(t)
+
+  implicit class LabelMakerOps[T:LabelMaker](t:T) {
+    def printLabel = implicitly[LabelMaker[T]].toLabel(t)
+  }
 }
 
-def printLabel[T: LabelMaker](t: T) = implicitly[LabelMaker[T]].toLabel(t)
+
 
 //def printLabel[T](t: T)(implicit lm: LabelMaker[T]) = lm.toLabel(t)
-
+import LabelMaker._
+Address(100, "Monroe Street", "Denver", "CO", "80231").printLabel
 printLabel(Address(100, "Monroe Street", "Denver", "CO", "80231"))
-
 
 
 
