@@ -41,3 +41,40 @@ object JsonSyntax {
 import JsonWriterInstances._
 import JsonSyntax._
 Person("Dave", "dave@example.com").toJson
+
+
+//Exercises
+
+trait Printable[A] {
+  def format(value: A): String
+}
+
+object PrintableInstances {
+  implicit val IntPrintable = new Printable[Int] {
+    override def format(value: Int): String = {
+      value.toString
+    }
+  }
+
+  implicit val StringPrintable = new Printable[String] {
+    override def format(value: String): String = {
+      value.toString
+    }
+  }
+}
+
+object PrintableSyntax {
+  implicit class PrintableOps[A:Printable](value:A) {
+    def print = println(implicitly[Printable[A]].format(value));
+    def format = implicitly[Printable[A]].format(value)
+  }
+}
+
+import PrintableInstances._
+import PrintableSyntax._
+
+2.format
+"hola mundo".format
+
+
+
